@@ -1,22 +1,23 @@
-# Use a base image with Python
+# Use the official Python image from the Docker Hub
 FROM python:3.10.14-slim
-
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
 
 # Set the working directory
 WORKDIR /app
 
-# Copy requirements and install dependencies
+# Copy the requirements file into the container
 COPY requirements.txt .
+
+# Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Copy the rest of the application code into the container
 COPY . .
 
-# Expose the port Streamlit runs on
-EXPOSE 8501
+# Set environment variables (optional if not using .env file)
+ENV NVIDIA_API_KEY=${NVIDIA_API_KEY}
 
-# Run the Streamlit application
-CMD ["streamlit", "run", "app.py"]
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Define the command to run the application
+CMD ["streamlit", "run", "app.py", "--server.port=8080"]
